@@ -1,0 +1,69 @@
+---
+import type { PortfolioProject } from "@lib/github";
+
+interface Props {
+  project: PortfolioProject;
+  showCommits?: boolean;
+}
+
+const { project, showCommits = true } = Astro.props;
+const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
+  dateStyle: "medium",
+  timeZone: "America/Campo_Grande",
+});
+const formatDate = (value: string | null) => {
+  if (!value) return "Data unavailable";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "Data unavailable" : dateFormatter.format(date);
+};
+---
+
+<article class="project-card" data-repository={project.repositoryUrl}>
+  <div class="project-card-top" id="projects">
+    <span class="project-repo-icon" aria-hidden="true">⌘</span>
+    <span>{project.language ?? "Open source"}</span>
+  </div>
+  <h3>
+    <a href={project.repositoryUrl} target="_blank" rel="noopener noreferrer">
+      {project.title}
+    </a>
+  </h3>
+  <p class="project-description">{project.summary}</p>
+  {project.impact && <p class="project-impact">{project.impact}</p>}
+
+  {project.technologies.length > 0 && (
+    <div class="tech-tags" aria-label="Tecnologias">
+      {project.technologies.slice(0, 5).map((technology) => (
+        <span class="tech-tag">{technology}</span>
+      ))}
+    </div>
+  )}
+
+  <div class="repo-facts">
+    <span>★ {new Intl.NumberFormat("pt-BR").format(project.stars)}</span>
+    <span>⑂ {new Intl.NumberFormat("pt-BR").format(project.forks)}</span>
+  </div>
+
+  {showCommits && project.commits.length > 0 && (
+    <ul class="commit-list" aria-label={"Latest changes to " + project.title}>
+      {project.commits.map((commit) => (
+        <li class="commit-item">
+          <span class="commit-sha">{commit.sha.slice(0, 7)}</span>
+          <div class="commit-meta">
+            <a href={commit.url} target="_blank" rel="noopener noreferrer" title={commit.message}>
+              {commit.message}
+            </a>
+            <span>{commit.author} · {formatDate(commit.date)}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <div class="project-card-bottom">
+    <a href={project.repositoryUrl} target="_blank" rel="noopener noreferrer">
+      Open repository <span aria-hidden="true">↗</span>
+    </a>
+    <span class="project-updated">Updated<br />{formatDate(project.pushedAt ?? project.updatedAt)}</span>
+  </div>
+</article>

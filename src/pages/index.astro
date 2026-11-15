@@ -1,0 +1,76 @@
+---
+import About from "@components/About.astro";
+import BaseLayout from "@components/BaseLayout.astro";
+import ContactForm from "@components/ContactForm.astro";
+import Hero from "@components/Hero.astro";
+import ProjectCard from "@components/ProjectCard.astro";
+import { getSiteSnapshot } from "@lib/site-content";
+
+const { settings, projects } = await getSiteSnapshot();
+const username = import.meta.env.PUBLIC_GITHUB_USERNAME || "toncogo";
+const featuredProjects = projects.filter((project) => project.featured).slice(0, 3);
+for (const project of projects) {
+  if (featuredProjects.length >= 3) break;
+  if (!featuredProjects.includes(project)) featuredProjects.push(project);
+}
+---
+
+<BaseLayout
+  title={settings.pageTitle}
+  description={settings.heroDescription}
+  accentColor={settings.accentColor}
+  socials={settings}
+>
+  <Hero
+    headline={settings.headline}
+    description={settings.heroDescription}
+    username={username}
+  />
+
+  <About intro={settings.aboutIntro} imageUrl={settings.profileImageUrl} />
+
+  <section class="section" id="destaques" aria-labelledby="projects-title">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <span class="section-label">Featured Work</span>
+          <h2 id="projects-title">Projects</h2>
+        </div>
+        <p>Recent repositories and activity on GitHub</p>
+      </div>
+
+      <div class="project-grid" data-project-grid data-github-user={username} data-limit="3">
+        {featuredProjects.map((project) => <ProjectCard project={project} showCommits={false} />)}
+      </div>
+      <p
+        class="project-load-status"
+        data-project-status
+        role="status"
+        aria-live="polite"
+        hidden={featuredProjects.length > 0}
+      >
+        {featuredProjects.length === 0 && "Searching for public repositories on GitHub… "}
+        {featuredProjects.length === 0 && (
+          <a href={"https://github.com/" + username} target="_blank" rel="noopener noreferrer">
+            Open GitHub profile
+          </a>
+        )}
+      </p>
+      <noscript>
+        <p class="empty-projects">
+          To load the highlights, enable JavaScript or visit
+          <a href={"https://github.com/" + username} target="_blank" rel="noopener noreferrer">the GitHub profile</a>.
+        </p>
+      </noscript>
+
+      <div class="hero-actions">
+        <a class="button" href="/projects">See more <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <ContactForm />
+  <script>
+    import "@scripts/projects-live";
+  </script>
+</BaseLayout>

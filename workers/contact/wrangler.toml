@@ -1,0 +1,17 @@
+name = "alyton-portfolio-contact"
+main = "src/index.js"
+compatibility_date = "2026-11-14"
+workers_dev = true
+
+# Configure this as the exact production origin of the Astro site.
+[vars]
+SITE_ORIGIN = "https://alyton-cogo-portfolio-ti.cogotechnologies.chatgpt.site"
+
+# Replace namespace_id with an unused positive integer in your Cloudflare account.
+[[ratelimits]]
+name = "CONTACT_LIMITER"
+namespace_id = "10021"
+
+  [ratelimits.simple]
+  limit = 5
+  period = 60

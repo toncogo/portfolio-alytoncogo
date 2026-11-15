@@ -1,0 +1,106 @@
+---
+const contactEndpoint = import.meta.env.PUBLIC_CONTACT_API_URL?.trim() ?? "";
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? "";
+const isReady = Boolean(contactEndpoint && turnstileSiteKey);
+---
+
+<section class="section" id="contact" aria-labelledby="contact-title">
+  <div class="container contact-section">
+    <div class="contact-intro">
+      <span class="section-label">Contact</span>
+      <h2 id="contact-title">Tell us about your project or send a proposal.</h2>
+      <p>
+        Facing a security challenge? Send a message. Total confidentiality guaranteed.
+      </p>
+    </div>
+
+    <form
+      class="contact-form"
+      id="contact-form"
+      data-endpoint={contactEndpoint}
+      data-ready={String(isReady)}
+    >
+      <div class="form-field">
+        <label for="contact-name">Name</label>
+        <input
+          id="contact-name"
+          name="name"
+          type="text"
+          autocomplete="name"
+          minlength="2"
+          maxlength="80"
+          required
+          placeholder="Full Name"
+        />
+      </div>
+      <div class="form-field">
+        <label for="contact-phone">Phone</label>
+        <input
+          id="contact-phone"
+          name="phone"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          maxlength="22"
+          required
+          placeholder="(67) 99999-9999"
+          aria-describedby="phone-hint"
+        />
+        <span class="sr-only" id="phone-hint">Provide the area code and phone number.</span>
+      </div>
+      <div class="form-field form-field-full">
+        <label for="contact-email">E-mail</label>
+        <input
+          id="contact-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          maxlength="254"
+          required
+          placeholder="you@example.com"
+        />
+      </div>
+      <div class="form-field form-field-full">
+        <label for="contact-subject">Subject</label>
+        <input
+          id="contact-subject"
+          name="subject"
+          type="text"
+          minlength="2"
+          maxlength="120"
+          required
+          placeholder="How can I help?"
+        />
+      </div>
+
+      <label class="honeypot" aria-hidden="true">
+        Do not fill in this field
+        <input name="website" type="text" tabindex="-1" autocomplete="off" />
+      </label>
+
+      {isReady && turnstileSiteKey && (
+        <div
+          class="turnstile-wrap cf-turnstile"
+          data-sitekey={turnstileSiteKey}
+          data-theme="dark"
+          data-action="contact"
+        ></div>
+      )}
+
+      <div class="form-submit-row">
+        <button class="button button-primary" type="submit" disabled={!isReady}>
+          Send message <span aria-hidden="true">↗</span>
+        </button>
+        <p class="form-status" id="contact-status" role="status" aria-live="polite"></p>
+        {!isReady && (
+          <p class="form-setup-note">
+            Configure <code>PUBLIC_CONTACT_API_URL</code> and <code>PUBLIC_TURNSTILE_SITE_KEY</code> to active.
+          </p>
+        )}
+      </div>
+    </form>
+  </div>
+  <script>
+    import "@scripts/contact-form";
+  </script>
+</section>
