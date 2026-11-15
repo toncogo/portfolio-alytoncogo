@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@components/BaseLayout.astro";
+import { DEFAULT_SETTINGS } from "@data/defaults";
+---
+
+<BaseLayout
+  title={"Página não encontrada | " + DEFAULT_SETTINGS.pageTitle}
+  description="The requested page was not found."
+  accentColor={DEFAULT_SETTINGS.accentColor}
+  socials={DEFAULT_SETTINGS}
+>
+  <section class="container page-heading">
+    <span class="section-label">Error 404</span>
+    <h1>Could not be found.</h1>
+    <p>Return to the home page to continue browsing the portfolio.</p>
+    <div class="hero-actions">
+      <a class="button button-primary" href="/">Go to Home page →</a>
+    </div>
+  </section>
+</BaseLayout>

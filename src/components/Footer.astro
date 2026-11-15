@@ -1,0 +1,52 @@
+---
+import SocialIcon from "@components/SocialIcon.astro";
+
+interface Props {
+  socials: {
+    instagramUrl: string;
+    whatsappUrl: string;
+    facebookUrl: string;
+    discordUrl: string;
+  };
+}
+
+const { socials } = Astro.props;
+const links = [
+  { label: "Instagram", href: socials.instagramUrl, icon: "instagram" },
+  { label: "WhatsApp", href: socials.whatsappUrl, icon: "whatsapp" },
+  { label: "Facebook", href: socials.facebookUrl, icon: "facebook" },
+  { label: "Discord", href: socials.discordUrl, icon: "discord" },
+] as const;
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span class="footer-copy">© {new Date().getFullYear()} Alyton Cogo. All rights reserved</span>
+    <div class="social-links" aria-label="Social media">
+      {links.map((item) => (
+        item.href ? (
+          <a
+            class="social-link"
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={item.label}
+            title={item.label}
+          >
+            <span class="sr-only">{item.label}</span>
+            <SocialIcon name={item.icon} />
+          </a>
+        ) : (
+          <span
+            class="social-link"
+            title={item.label + ": add the link in Sanity"}
+            aria-label={item.label + ", link not configured"}
+          >
+            <SocialIcon name={item.icon} />
+          </span>
+        )
+      ))}
+    </div>
+    <a class="back-to-top" href="#conteudo">Go to top ↑</a>
+  </div>
+</footer>

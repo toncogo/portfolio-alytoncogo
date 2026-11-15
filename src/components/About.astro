@@ -1,0 +1,67 @@
+---
+import { CAREER, EDUCATION, SKILLS } from "@data/defaults";
+
+interface Props {
+  intro: string;
+  imageUrl: string;
+}
+
+const { intro, imageUrl } = Astro.props;
+---
+
+<section class="section" id="sobre" aria-labelledby="about-title">
+  <div class="container">
+    <div class="about-grid">
+      <figure class="profile-frame">
+        <img
+          src={imageUrl}
+          alt="Picture of Alyton Cogo"
+          width="720"
+          height="900"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption class="profile-caption">Alyton Cogo · Cybersecurity Specialist</figcaption>
+      </figure>
+
+      <div class="about-copy" id="about">
+        <span class="section-label">About me</span>
+        <h2 id="about-title">Investigate, develop and protect</h2>
+        <p>{intro}</p>
+        <div class="skills-block">
+          <h3 class="skills-heading">Languages</h3>
+          <div class="skills-grid">
+            {SKILLS.map((skill) => <span class="skill-tag">{skill}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-grid" id="timeline">
+      <section class="timeline-column" aria-labelledby="career-heading">
+        <h3 id="career-heading"><span class="section-label">Experience</span></h3>
+        <ol class="timeline">
+          {CAREER.map((item) => (
+            <li class="timeline-item">
+              <h4>{item.title}</h4>
+              <p>{item.organization}</p>
+              <span>{item.detail}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="timeline-column" aria-labelledby="education-heading">
+        <h3 id="education-heading"><span class="section-label">Education</span></h3>
+        <ol class="timeline">
+          {EDUCATION.map((item) => (
+            <li class="timeline-item">
+              <h4>{item.title}</h4>
+              <p>{item.organization}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
+  </div>
+</section>

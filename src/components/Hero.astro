@@ -1,0 +1,25 @@
+---
+interface Props {
+  headline: string;
+  description: string;
+  username: string;
+}
+
+const { headline, description, username } = Astro.props;
+const githubUrl = "https://github.com/" + encodeURIComponent(username);
+---
+
+<section class="container hero" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <h1 id="hero-title">{headline}</h1>
+    <p class="hero-description">{description}</p>
+    <div class="hero-actions">
+      <a class="button button-primary" href={githubUrl} target="_blank" rel="noopener noreferrer">
+        <span>See GitHub</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+      <a class="button" href="/projects">All Projects <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+
+</section>

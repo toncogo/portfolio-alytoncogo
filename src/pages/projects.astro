@@ -1,0 +1,55 @@
+---
+import BaseLayout from "@components/BaseLayout.astro";
+import ProjectCard from "@components/ProjectCard.astro";
+import { getSiteSnapshot } from "@lib/site-content";
+
+const { settings, projects } = await getSiteSnapshot();
+const username = import.meta.env.PUBLIC_GITHUB_USERNAME || "toncogo";
+---
+
+<BaseLayout
+  title={"Projects | " + settings.pageTitle}
+  description="Projects, repositories, and recent changes on Alyton Cogo's GitHub."
+  accentColor={settings.accentColor}
+  socials={settings}
+>
+  <section class="container page-heading">
+    <span class="section-label">Repositories and code</span>
+    <h1>All Public Projects</h1>
+    <p>
+      Descriptions, languages, recent activity, and commits. Data is loaded from GitHub when this page is opened.
+    </p>
+  </section>
+
+  <section class="section projects-page" aria-label="Projects List">
+    <div class="container">
+      <div class="project-grid" data-project-grid data-github-user={username} data-limit="24">
+        {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
+      <p
+        class="project-load-status"
+        data-project-status
+        role="status"
+        aria-live="polite"
+        hidden={projects.length > 0}
+      >
+        {projects.length === 0 && "Searching for public repositories on GitHub… "}
+        {projects.length === 0 && (
+          <a href={"https://github.com/" + username} target="_blank" rel="noopener noreferrer">
+            Open GitHub profile
+          </a>
+        )}
+      </p>
+      <noscript>
+        <p class="empty-projects">
+          To load the list, enable JavaScript or visit
+          <a href={"https://github.com/" + username} target="_blank" rel="noopener noreferrer">the GitHub profile</a>.
+        </p>
+      </noscript>
+      <p class="build-note">Descriptions, activity, and recent commits retrieved via the public GitHub API.</p>
+    </div>
+  </section>
+  <script>
+    import "@scripts/projects-live";
+  </script>
+</BaseLayout>
